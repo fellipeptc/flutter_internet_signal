@@ -1,40 +1,16 @@
 # flutter_internet_signal_example
 
-- [by: fellipe prates](https://github.com/fellipeptc)
+Demonstrates how to use the flutter_internet_signal plugin.
 
-A Flutter plugin for Android that get mobile signal network in dBm value.
-The value in dBm is negative, so the better connection, the value is closer to 0.
+## Getting Started
 
-|                | Android | iOS       |
-|----------------|---------|-----------|
-| **Support**    | SDK 17+ | under development | 
+This project is a starting point for a Flutter application.
 
-### Android
+A few resources to get you started if this is your first Flutter project:
 
-Change the minimum Android sdk version to 17 (or higher) in your `android/app/build.gradle` file.
+- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
+- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
 
-```groovy
-minSdkVersion 17
-```
-
-Add permissions in your `manifest` file.
-
-```groovy
-<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-<uses-permission android:name="android.permission.READ_PHONE_STATE" />
-```
-
-## Example
-
-<?code-excerpt "main.dart (AppLifecycle)"?>
-```dart
-import 'package:flutter_internet_signal/flutter_internet_signal.dart';
-
-void main() async {
-  final FlutterInternetSignal internetSignal = FlutterInternetSignal();
-  final int? signal = await internetSignal.getMobileSignalStrength();
-  print('Result dBm -> $signal');
-}
-```
-
-For a more elaborate usage example, build and debug [main.dart](https://github.com/fellipeptc/flutter_internet_signal/blob/main/example/lib/main.dart)
+For help getting started with Flutter development, view the
+[online documentation](https://docs.flutter.dev/), which offers tutorials,
+samples, guidance on mobile development, and a full API reference.
