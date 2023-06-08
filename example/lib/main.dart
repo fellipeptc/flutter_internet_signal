@@ -17,50 +17,50 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String _platformVersion = 'Unknown';
-  int? _signalInternet;
+  int? _mobileSignal;
+  String? _version;
   DateTime _now = DateTime.now();
   final _flutterInternetSignalPlugin = FlutterInternetSignal();
 
   @override
   void initState() {
     super.initState();
-    initPlatformState();
-    loopGetInternet();
+    _timer();
+    _getPlatformVersion();
   }
 
-  Future loopGetInternet() async {
+  Future<void> _getPlatformVersion() async {
+    try {
+      _version = await _flutterInternetSignalPlugin.getPlatformVersion();
+    } on PlatformException {
+      if (kDebugMode) {
+        print('Error get mobile signal dBm.');
+        _version = null;
+      }
+    }
+  }
+
+  Future _timer() async {
     while (true) {
       await Future.delayed(const Duration(milliseconds: 1000));
-      int? signalInternet;
-      try {
-        signalInternet =
-            await _flutterInternetSignalPlugin.getIntertSignalCellphone() ?? -1;
-      } on PlatformException {
-        if (kDebugMode) {
-          print('Error get signal internet.');
-          _signalInternet = null;
-        }
-      }
       setState(() {
         _now = DateTime.now();
-        _signalInternet = signalInternet;
       });
     }
   }
 
-  Future<void> initPlatformState() async {
-    String platformVersion;
+  Future<void> _getMobileSignalStrength() async {
+    int? mobile;
     try {
-      platformVersion =
-          await _flutterInternetSignalPlugin.getPlatformVersion() ??
-              'Unknown platform version';
+      mobile = await _flutterInternetSignalPlugin.getMobileSignalStrength();
     } on PlatformException {
-      platformVersion = 'Failed to get platform version.';
+      if (kDebugMode) {
+        print('Error get mobile signal dBm.');
+        _mobileSignal = null;
+      }
     }
-    if (!mounted) return;
     setState(() {
-      _platformVersion = platformVersion;
+      _mobileSignal = mobile;
     });
   }
 
@@ -69,15 +69,19 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Plugin example app'),
+          title: const Text('Internet Signal Example'),
         ),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text('Running on: $_platformVersion\n'),
-              Text('On signal: ${_signalInternet ?? 'No connection'} [dBm]\n'),
+              Text('On Version: $_version'),
+              Text('On signal: ${_mobileSignal ?? 'No result'} [dBm]\n'),
               Text('Time: ${_now.hour}:${_now.minute}:${_now.second} \n'),
+              ElevatedButton(
+                onPressed: _getMobileSignalStrength,
+                child: const Text('Get mobile signal'),
+              )
             ],
           ),
         ),

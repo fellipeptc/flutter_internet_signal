@@ -28,10 +28,10 @@ class FlutterInternetSignalPlugin : FlutterPlugin, MethodCallHandler {
         if (call.method == "getPlatformVersion") {
             result.success("Android ${android.os.Build.VERSION.RELEASE}")
         }
-        if (call.method == "getInternetSignal") {
-            result.success(signalStrengthHelper.getSignalStrength())
+        if (call.method == "getMobileSignalStrength") {
+            val signal = signalStrengthHelper.getMobileSignalStrength()
+            result.success(signal)
         }
-        result.notImplemented()
     }
 
     override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {

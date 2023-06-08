@@ -17,8 +17,9 @@ class MethodChannelFlutterInternetSignal extends FlutterInternetSignalPlatform {
   }
 
   @override
-  Future<int?> getInternetSignal() async {
-    final singal = await methodChannel.invokeMethod<int?>('getInternetSignal');
-    return singal;
+  Future<int?> getMobileSignalStrength() async {
+    final signal =
+        await methodChannel.invokeMethod<int?>('getMobileSignalStrength');
+    return signal;
   }
 }

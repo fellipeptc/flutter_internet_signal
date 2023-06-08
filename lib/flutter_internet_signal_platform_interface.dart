@@ -28,7 +28,8 @@ abstract class FlutterInternetSignalPlatform extends PlatformInterface {
     throw UnimplementedError('platformVersion() has not been implemented.');
   }
 
-  Future<int?> getInternetSignal() {
-    throw UnimplementedError('getInternetSignal() has not been implemented.');
+  Future<int?> getMobileSignalStrength() {
+    throw UnimplementedError(
+        'getMobileSignalStrength() has not been implemented.');
   }
 }
