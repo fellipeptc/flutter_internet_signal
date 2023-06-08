@@ -1,3 +1,7 @@
+## 0.0.21
+
+* Fix CHANGELOG info
+
 ## 0.0.2
 
 * Upgrade function to getMobileSignalStrength()
