@@ -32,4 +32,13 @@ abstract class FlutterInternetSignalPlatform extends PlatformInterface {
     throw UnimplementedError(
         'getMobileSignalStrength() has not been implemented.');
   }
+
+  Future<int?> getWifiSignalStrength() {
+    throw UnimplementedError(
+        'getWifiSignalStrength() has not been implemented.');
+  }
+
+  Future<int?> getWifiLinkSpeed() {
+    throw UnimplementedError('getWifiLinkSpeed() has not been implemented.');
+  }
 }

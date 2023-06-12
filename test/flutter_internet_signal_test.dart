@@ -12,6 +12,12 @@ class MockFlutterInternetSignalPlatform
 
   @override
   Future<int?> getMobileSignalStrength() => Future.value(-100);
+
+  @override
+  Future<int?> getWifiSignalStrength() => Future.value(-100);
+
+  @override
+  Future<int?> getWifiLinkSpeed() => Future.value(250);
 }
 
 void main() {
@@ -38,5 +44,23 @@ void main() {
     FlutterInternetSignalPlatform.instance = fakePlatform;
 
     expect(await flutterInternetSignalPlugin.getMobileSignalStrength(), -100);
+  });
+
+  test('getWifiSignalStrength', () async {
+    FlutterInternetSignal flutterInternetSignalPlugin = FlutterInternetSignal();
+    MockFlutterInternetSignalPlatform fakePlatform =
+        MockFlutterInternetSignalPlatform();
+    FlutterInternetSignalPlatform.instance = fakePlatform;
+
+    expect(await flutterInternetSignalPlugin.getWifiSignalStrength(), -100);
+  });
+
+  test('getWifiLinkSpeed', () async {
+    FlutterInternetSignal flutterInternetSignalPlugin = FlutterInternetSignal();
+    MockFlutterInternetSignalPlatform fakePlatform =
+        MockFlutterInternetSignalPlatform();
+    FlutterInternetSignalPlatform.instance = fakePlatform;
+
+    expect(await flutterInternetSignalPlugin.getWifiLinkSpeed(), 250);
   });
 }

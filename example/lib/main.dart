@@ -18,49 +18,43 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   int? _mobileSignal;
+  int? _wifiSignal;
+  int? _wifiSpeed;
   String? _version;
-  DateTime _now = DateTime.now();
-  final _flutterInternetSignalPlugin = FlutterInternetSignal();
+
+  final _internetSignal = FlutterInternetSignal();
 
   @override
   void initState() {
     super.initState();
-    _timer();
     _getPlatformVersion();
   }
 
   Future<void> _getPlatformVersion() async {
     try {
-      _version = await _flutterInternetSignalPlugin.getPlatformVersion();
+      _version = await _internetSignal.getPlatformVersion();
     } on PlatformException {
-      if (kDebugMode) {
-        print('Error get mobile signal dBm.');
-        _version = null;
-      }
+      if (kDebugMode) print('Error get Android version.');
+      _version = null;
     }
+    setState(() {});
   }
 
-  Future _timer() async {
-    while (true) {
-      await Future.delayed(const Duration(milliseconds: 1000));
-      setState(() {
-        _now = DateTime.now();
-      });
-    }
-  }
-
-  Future<void> _getMobileSignalStrength() async {
+  Future<void> _getInternetSignal() async {
     int? mobile;
+    int? wifi;
+    int? wifiSpeed;
     try {
-      mobile = await _flutterInternetSignalPlugin.getMobileSignalStrength();
+      mobile = await _internetSignal.getMobileSignalStrength();
+      wifi = await _internetSignal.getWifiSignalStrength();
+      wifiSpeed = await _internetSignal.getWifiLinkSpeed();
     } on PlatformException {
-      if (kDebugMode) {
-        print('Error get mobile signal dBm.');
-        _mobileSignal = null;
-      }
+      if (kDebugMode) print('Error get internet signal.');
     }
     setState(() {
       _mobileSignal = mobile;
+      _wifiSignal = wifi;
+      _wifiSpeed = wifiSpeed;
     });
   }
 
@@ -75,12 +69,13 @@ class _MyAppState extends State<MyApp> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text('On Version: $_version'),
-              Text('On signal: ${_mobileSignal ?? 'No result'} [dBm]\n'),
-              Text('Time: ${_now.hour}:${_now.minute}:${_now.second} \n'),
+              Text('On Version: $_version \n'),
+              Text('Mobile signal: ${_mobileSignal ?? '--'} [dBm]\n'),
+              Text('Wifi signal: ${_wifiSignal ?? '--'} [dBm]\n'),
+              Text('Wifi speed: ${_wifiSpeed ?? '--'} Mbps\n'),
               ElevatedButton(
-                onPressed: _getMobileSignalStrength,
-                child: const Text('Get mobile signal'),
+                onPressed: _getInternetSignal,
+                child: const Text('Get internet signal'),
               )
             ],
           ),

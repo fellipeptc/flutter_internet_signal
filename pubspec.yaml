@@ -1,6 +1,6 @@
 name: flutter_internet_signal
 description: Package get internet signal using Flutter, the value is dBm.
-version: 0.0.21
+version: 0.0.3
 homepage: https://github.com/fellipeptc/flutter_internet_signal
 
 environment:

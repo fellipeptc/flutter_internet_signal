@@ -29,8 +29,16 @@ class FlutterInternetSignalPlugin : FlutterPlugin, MethodCallHandler {
             result.success("Android ${android.os.Build.VERSION.RELEASE}")
         }
         if (call.method == "getMobileSignalStrength") {
-            val signal = signalStrengthHelper.getMobileSignalStrength()
-            result.success(signal)
+            val mobileSignal = signalStrengthHelper.getMobileSignalStrength()
+            result.success(mobileSignal)
+        }
+        if (call.method == "getWifiSignalStrength") {
+            val wifiSignal = signalStrengthHelper.getWifiSignalStrength()
+            result.success(wifiSignal)
+        }
+        if (call.method == "getWifiLinkSpeed") {
+            val wifiSignal = signalStrengthHelper.getWifiLinkSpeed()
+            result.success(wifiSignal)
         }
     }
 

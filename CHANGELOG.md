@@ -1,3 +1,8 @@
+## 0.0.3
+
+* Add method getWifiSignalStrength()
+* Add method getWifiLinkSpeed()
+
 ## 0.0.21
 
 * Fix CHANGELOG info
