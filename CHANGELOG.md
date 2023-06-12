@@ -1,4 +1,4 @@
-## 0.0.3
+## 0.0.30
 
 * Add method getWifiSignalStrength()
 * Add method getWifiLinkSpeed()
