@@ -10,7 +10,7 @@ The dBm value is negative — the closer to 0, the better the signal (e.g., -30 
 ## ✨ New method - getWifiSignalInfo()
 
 - Deprecated: getWifiSignalStrength() and getWifiLinkSpeed()
-- New: getWifiLinkSpeed() method returns the class WifiSignalInfo.
+- New: getWifiSignalInfo() method returns the class WifiSignalInfo.
 
 | Property  | Type      | Description                             |
 |-----------|-----------|-----------------------------------------|
