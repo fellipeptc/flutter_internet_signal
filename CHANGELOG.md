@@ -1,3 +1,9 @@
+## 0.0.40
+
+* Method getWifiSignalStrength() deprecated
+* Method getWifiLinkSpeed() deprecated
+* Add method getWifiSignalInfo() for get info wifi
+
 ## 0.0.30
 
 * Add method getWifiSignalStrength()
