@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_internet_signal/signal_info/wifi_signal_info.dart';
 
 import 'flutter_internet_signal_platform_interface.dart';
 
@@ -10,29 +11,51 @@ class MethodChannelFlutterInternetSignal extends FlutterInternetSignalPlatform {
   final methodChannel = const MethodChannel('flutter_internet_signal');
 
   @override
-  Future<String?> getPlatformVersion() async {
-    final version =
-        await methodChannel.invokeMethod<String>('getPlatformVersion');
-    return version;
+  Future<int?> getMobileSignalStrength() async {
+    final signal = await methodChannel.invokeMethod<int?>('getMobileSignalStrength');
+    return signal;
   }
 
   @override
-  Future<int?> getMobileSignalStrength() async {
-    final signal =
-        await methodChannel.invokeMethod<int?>('getMobileSignalStrength');
-    return signal;
+  Future<WifiSignalInfo?> getWifiSignalInfo() async {
+    if (await _isWifiEnabled() == false) return null;
+    return WifiSignalInfo(
+      dbm: await getWifiSignalStrength(),
+      mbps: await getWifiLinkSpeed(),
+      ssid: await _getWifiSsid(),
+      bssid: await _getgetWifiBssid(),
+      ipAddress: await _getWifiIpAddress(),
+    );
   }
 
   @override
   Future<int?> getWifiSignalStrength() async {
-    final signal =
-        await methodChannel.invokeMethod<int?>('getWifiSignalStrength');
-    return signal;
+    final wifiSignal = await methodChannel.invokeMethod<int?>('getWifiSignalStrength');
+    return wifiSignal;
   }
 
   @override
   Future<int?> getWifiLinkSpeed() async {
     final speed = await methodChannel.invokeMethod<int?>('getWifiLinkSpeed');
     return speed;
+  }
+
+  Future<String?> _getWifiSsid() async {
+    final ssid = await methodChannel.invokeMethod<String?>('getWifiSsid');
+    return ssid;
+  }
+
+  Future<String?> _getgetWifiBssid() async {
+    final bssid = await methodChannel.invokeMethod<String?>('getWifiBssid');
+    return bssid;
+  }
+
+  Future<String?> _getWifiIpAddress() async {
+    final ssid = await methodChannel.invokeMethod<String?>('getWifiIpAddress');
+    return ssid;
+  }
+
+  Future<bool> _isWifiEnabled() async {
+    return await methodChannel.invokeMethod<bool?>('isWifiEnabled') ?? false;
   }
 }

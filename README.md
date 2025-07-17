@@ -2,11 +2,23 @@
 
 - [by: Fellipe Prates](https://github.com/fellipeptc)
 
-A Flutter plugin for Android that get **mobile** and **wifi** signal network.
-Returns the received signal strength indicator of the current 802.11 network, in dBm.
-The value in dBm is negative, so the better connection, the value is closer to 0.
+A Flutter plugin for **Android** to retrieve **mobile** and **Wi-Fi** signal information.
 
-- New: getWifiLinkSpeed() method returns the speed indicator wifi network, in Mpbs.
+Returns the received signal strength indicator (RSSI) of the current network in **dBm**.  
+The dBm value is negative — the closer to 0, the better the signal (e.g., -30 is excellent, -100 is poor).
+
+## ✨ New method - getWifiSignalInfo()
+
+- Deprecated: getWifiSignalStrength() and getWifiLinkSpeed()
+- New: getWifiLinkSpeed() method returns the class WifiSignalInfo.
+
+| Property  | Type      | Description                             |
+|-----------|-----------|-----------------------------------------|
+| `dbm`     | `int?`    | Wi-Fi signal strength (in dBm)          |
+| `mbps`    | `int?`    | Wi-Fi link speed (in Mbps)              |
+| `ssid`    | `String?` | Wi-Fi network name (SSID)               |
+| `bssid`   | `String?` | MAC address of the access point (BSSID) |
+| `ip`      | `String?` | Local IP address                        |
 
 |                | Android | iOS       |
 |----------------|---------|-----------|
@@ -39,9 +51,9 @@ import 'package:flutter_internet_signal/flutter_internet_signal.dart';
 void main() async {
   final FlutterInternetSignal internetSignal = FlutterInternetSignal();
   final int? mobileSignal = await internetSignal.getMobileSignalStrength();
-  final int? wifiSignal = await internetSignal.getWifiSignalStrength();
+  final WifiSignalInfo? wifiSignal = await internetSignal.getWifiSignalInfo();
   print('Result dBm -> $mobileSignal');
-  print('Result dBm -> $wifiSignal');
+  print('Result wifi info -> ${wifiSignal.toString()}');
 }
 ```
 

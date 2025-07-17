@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_internet_signal/flutter_internet_signal.dart';
+import 'package:flutter_internet_signal/signal_info/wifi_signal_info.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,44 +19,47 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   int? _mobileSignal;
-  int? _wifiSignal;
-  int? _wifiSpeed;
-  String? _version;
+
+  Timer? _pollingTimer;
+  StreamController<WifiSignalInfo?>? _wifiSignalController;
+  Stream<WifiSignalInfo?> get wifiSignalStream => _wifiSignalController!.stream;
 
   final _internetSignal = FlutterInternetSignal();
 
   @override
   void initState() {
     super.initState();
-    _getPlatformVersion();
+    _wifiSignalController = StreamController<WifiSignalInfo?>.broadcast();
+    _startSignalStream();
   }
 
-  Future<void> _getPlatformVersion() async {
-    try {
-      _version = await _internetSignal.getPlatformVersion();
-    } on PlatformException {
-      if (kDebugMode) print('Error get Android version.');
-      _version = null;
-    }
-    setState(() {});
-  }
-
-  Future<void> _getInternetSignal() async {
-    int? mobile;
-    int? wifi;
-    int? wifiSpeed;
-    try {
-      mobile = await _internetSignal.getMobileSignalStrength();
-      wifi = await _internetSignal.getWifiSignalStrength();
-      wifiSpeed = await _internetSignal.getWifiLinkSpeed();
-    } on PlatformException {
-      if (kDebugMode) print('Error get internet signal.');
-    }
-    setState(() {
-      _mobileSignal = mobile;
-      _wifiSignal = wifi;
-      _wifiSpeed = wifiSpeed;
+  void _startSignalStream() {
+    _pollingTimer = Timer.periodic(const Duration(seconds: 2), (_) async {
+      try {
+        final wifi = await _internetSignal.getWifiSignalInfo();
+        _wifiSignalController?.add(wifi);
+      } catch (e) {
+        if (kDebugMode) print('Error open signal: $e');
+      }
     });
+  }
+
+  Future<void> _getMobileSignal() async {
+    try {
+      final mobile = await _internetSignal.getMobileSignalStrength();
+      setState(() {
+        _mobileSignal = mobile;
+      });
+    } on PlatformException {
+      if (kDebugMode) print('Error get mobile signal.');
+    }
+  }
+
+  @override
+  void dispose() {
+    _pollingTimer?.cancel();
+    _wifiSignalController?.close();
+    super.dispose();
   }
 
   @override
@@ -69,14 +73,34 @@ class _MyAppState extends State<MyApp> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text('On Version: $_version \n'),
               Text('Mobile signal: ${_mobileSignal ?? '--'} [dBm]\n'),
-              Text('Wifi signal: ${_wifiSignal ?? '--'} [dBm]\n'),
-              Text('Wifi speed: ${_wifiSpeed ?? '--'} Mbps\n'),
+              SizedBox(height: 24),
               ElevatedButton(
-                onPressed: _getInternetSignal,
-                child: const Text('Get internet signal'),
-              )
+                onPressed: _getMobileSignal,
+                child: const Text('Get mobile signal'),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(24),
+                child: Divider(color: Colors.deepPurple),
+              ),
+              StreamBuilder<WifiSignalInfo?>(
+                stream: wifiSignalStream,
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) return const CircularProgressIndicator();
+                  final signal = snapshot.data;
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('STREAM\n'),
+                      Text('Wifi signal: ${signal?.dbm ?? '--'} [dBm]\n'),
+                      Text('Wifi speed: ${signal?.mbps ?? '--'} [Mbps]\n'),
+                      Text('Wifi ssid: ${signal?.ssid ?? '--'}\n'),
+                      Text('Wifi bssid: ${signal?.bssid ?? '--'}\n'),
+                      Text('Wifi IP: ${signal?.ipAddress ?? '--'}\n'),
+                    ],
+                  );
+                },
+              ),
             ],
           ),
         ),

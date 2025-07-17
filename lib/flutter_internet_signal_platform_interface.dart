@@ -1,3 +1,4 @@
+import 'package:flutter_internet_signal/signal_info/wifi_signal_info.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'flutter_internet_signal_method_channel.dart';
@@ -8,8 +9,7 @@ abstract class FlutterInternetSignalPlatform extends PlatformInterface {
 
   static final Object _token = Object();
 
-  static FlutterInternetSignalPlatform _instance =
-      MethodChannelFlutterInternetSignal();
+  static FlutterInternetSignalPlatform _instance = MethodChannelFlutterInternetSignal();
 
   /// The default instance of [FlutterInternetSignalPlatform] to use.
   ///
@@ -24,21 +24,19 @@ abstract class FlutterInternetSignalPlatform extends PlatformInterface {
     _instance = instance;
   }
 
-  Future<String?> getPlatformVersion() {
-    throw UnimplementedError('platformVersion() has not been implemented.');
-  }
-
   Future<int?> getMobileSignalStrength() {
-    throw UnimplementedError(
-        'getMobileSignalStrength() has not been implemented.');
+    throw UnimplementedError('getMobileSignalStrength() has not been implemented.');
   }
 
   Future<int?> getWifiSignalStrength() {
-    throw UnimplementedError(
-        'getWifiSignalStrength() has not been implemented.');
+    throw UnimplementedError('getWifiSignalStrength() has not been implemented.');
   }
 
   Future<int?> getWifiLinkSpeed() {
     throw UnimplementedError('getWifiLinkSpeed() has not been implemented.');
+  }
+
+  Future<WifiSignalInfo?> getWifiSignalInfo() {
+    throw UnimplementedError('getWifiSignalInfo() has not been implemented.');
   }
 }

@@ -15,30 +15,43 @@ class FlutterInternetSignalPlugin : FlutterPlugin, MethodCallHandler {
     /// when the Flutter Engine is detached from the Activity
     private lateinit var channel: MethodChannel
     private lateinit var context: Context
-    private lateinit var signalStrengthHelper: SignalStrengthHelper
+    private lateinit var signalHelper: SignalHelper
 
     override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         channel = MethodChannel(flutterPluginBinding.binaryMessenger, "flutter_internet_signal")
         channel.setMethodCallHandler(this)
         context = flutterPluginBinding.applicationContext
-        signalStrengthHelper = SignalStrengthHelper(context)
+        signalHelper = SignalHelper(context)
     }
 
     override fun onMethodCall(call: MethodCall, result: Result) {
-        if (call.method == "getPlatformVersion") {
-            result.success("Android ${android.os.Build.VERSION.RELEASE}")
-        }
         if (call.method == "getMobileSignalStrength") {
-            val mobileSignal = signalStrengthHelper.getMobileSignalStrength()
+            val mobileSignal = signalHelper.getMobileSignalStrength()
             result.success(mobileSignal)
         }
         if (call.method == "getWifiSignalStrength") {
-            val wifiSignal = signalStrengthHelper.getWifiSignalStrength()
+            val wifiSignal = signalHelper.getWifiSignalStrength()
             result.success(wifiSignal)
         }
         if (call.method == "getWifiLinkSpeed") {
-            val wifiSignal = signalStrengthHelper.getWifiLinkSpeed()
-            result.success(wifiSignal)
+            val speed = signalHelper.getWifiLinkSpeed()
+            result.success(speed)
+        }
+        if (call.method == "getWifiSsid") {
+            val wifiSsid = signalHelper.getWifiSsid()
+            result.success(wifiSsid)
+        }
+        if (call.method == "getWifiBssid") {
+            val wifiBssid = signalHelper.getWifiBssid()
+            result.success(wifiBssid)
+        }
+        if (call.method == "getWifiIpAddress") {
+            val ipAddress = signalHelper.getWifiIpAddress()
+            result.success(ipAddress)
+        }
+        if (call.method == "isWifiEnabled") {
+            val isWifiEnabled = signalHelper.isWifiEnabled()
+            result.success(isWifiEnabled)
         }
     }
 

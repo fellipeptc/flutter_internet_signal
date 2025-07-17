@@ -1,9 +1,8 @@
 package br.com.prates.flutter_internet_signal
 
-import android.annotation.TargetApi
 import android.content.Context
 import android.net.ConnectivityManager
-import android.net.NetworkRequest
+import android.net.NetworkCapabilities
 import android.net.wifi.WifiInfo
 import android.net.wifi.WifiManager
 import android.os.Build
@@ -11,14 +10,13 @@ import android.telephony.CellInfoCdma
 import android.telephony.CellInfoGsm
 import android.telephony.CellInfoLte
 import android.telephony.TelephonyManager
-import android.text.format.Formatter.formatIpAddress
 import androidx.annotation.RequiresApi
 import java.net.Inet4Address
+import java.net.InetAddress
 
 
-class SignalStrengthHelper(private val context: Context) {
+class SignalHelper(private val context: Context) {
 
-    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     fun getMobileSignalStrength(): Int? {
         val telephonyManager = context.getSystemService(Context.TELEPHONY_SERVICE) as? TelephonyManager ?: return null
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -35,7 +33,6 @@ class SignalStrengthHelper(private val context: Context) {
             if (strength != null && strength > 0) null else strength
         }
     }
-
 
     fun getWifiSignalStrength(): Int? {
         val wifiInfo: WifiInfo? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -61,8 +58,22 @@ class SignalStrengthHelper(private val context: Context) {
         return wifiInfo?.linkSpeed
     }
 
-
     fun getWifiSsid(): String? {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S){
+            return getSSIDInfoFromConnectivityManager()
+        }
+        val wifiManager = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as? WifiManager
+        if (wifiManager?.isWifiEnabled == true) {
+            val wifiInfo: WifiInfo? = wifiManager.connectionInfo
+            if (wifiInfo != null) {
+                if(wifiInfo.hiddenSSID) return "SSID Hidden"
+            }
+            return wifiInfo?.ssid
+        }
+        return null
+    }
+
+    fun getWifiBssid(): String? {
         val wifiInfo: WifiInfo? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             getWifiInfoFromConnectivityManager()
         } else {
@@ -71,7 +82,7 @@ class SignalStrengthHelper(private val context: Context) {
                 wifiManager.connectionInfo
             } else null
         }
-        return wifiInfo?.ssid
+        return wifiInfo?.bssid
     }
 
     fun getWifiIpAddress(): String? {
@@ -88,6 +99,10 @@ class SignalStrengthHelper(private val context: Context) {
         }
     }
 
+    fun isWifiEnabled(): Boolean {
+        val wifiManager = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as? WifiManager
+        return wifiManager?.isWifiEnabled == true
+    }
 
     @RequiresApi(Build.VERSION_CODES.S)
     private fun getWifiInfoFromConnectivityManager(): WifiInfo? {
@@ -98,6 +113,23 @@ class SignalStrengthHelper(private val context: Context) {
         val transportInfo = networkCapabilities.transportInfo
         if (transportInfo is WifiInfo) {
             return transportInfo
+        }
+        return null
+    }
+
+    @RequiresApi(Build.VERSION_CODES.S)
+    private fun getSSIDInfoFromConnectivityManager(): String? {
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager ?: return null
+        val activeNetwork = connectivityManager.activeNetwork ?: return null
+        val networkCapabilities = connectivityManager.getNetworkCapabilities(activeNetwork) ?: return null
+
+        if (networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+            val wifiManager = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+            val info = wifiManager.connectionInfo
+            if(info.hiddenSSID) return "SSID Hidden"
+            if (info.ssid != WifiManager.UNKNOWN_SSID) {
+                return info.ssid
+            }
         }
         return null
     }
@@ -117,5 +149,19 @@ class SignalStrengthHelper(private val context: Context) {
             }
         }
         return null
+    }
+
+    private fun formatIpAddress(ip: Int): String {
+        return try {
+            val bytes = byteArrayOf(
+                (ip and 0xFF).toByte(),
+                (ip shr 8 and 0xFF).toByte(),
+                (ip shr 16 and 0xFF).toByte(),
+                (ip shr 24 and 0xFF).toByte()
+            )
+            InetAddress.getByAddress(bytes).hostAddress
+        } catch (e: Exception) {
+            null
+        } ?: ""
     }
 }

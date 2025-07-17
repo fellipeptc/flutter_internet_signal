@@ -1,15 +1,11 @@
+import 'package:flutter_internet_signal/signal_info/wifi_signal_info.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_internet_signal/flutter_internet_signal.dart';
 import 'package:flutter_internet_signal/flutter_internet_signal_platform_interface.dart';
 import 'package:flutter_internet_signal/flutter_internet_signal_method_channel.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
-class MockFlutterInternetSignalPlatform
-    with MockPlatformInterfaceMixin
-    implements FlutterInternetSignalPlatform {
-  @override
-  Future<String?> getPlatformVersion() => Future.value('42');
-
+class MockFlutterInternetSignalPlatform with MockPlatformInterfaceMixin implements FlutterInternetSignalPlatform {
   @override
   Future<int?> getMobileSignalStrength() => Future.value(-100);
 
@@ -18,49 +14,31 @@ class MockFlutterInternetSignalPlatform
 
   @override
   Future<int?> getWifiLinkSpeed() => Future.value(250);
+
+  @override
+  Future<WifiSignalInfo?> getWifiSignalInfo() => Future.value(WifiSignalInfo());
 }
 
 void main() {
-  final FlutterInternetSignalPlatform initialPlatform =
-      FlutterInternetSignalPlatform.instance;
+  final FlutterInternetSignalPlatform initialPlatform = FlutterInternetSignalPlatform.instance;
 
   test('$MethodChannelFlutterInternetSignal is the default instance', () {
     expect(initialPlatform, isInstanceOf<MethodChannelFlutterInternetSignal>());
   });
 
-  test('getPlatformVersion', () async {
-    FlutterInternetSignal flutterInternetSignalPlugin = FlutterInternetSignal();
-    MockFlutterInternetSignalPlatform fakePlatform =
-        MockFlutterInternetSignalPlatform();
-    FlutterInternetSignalPlatform.instance = fakePlatform;
-
-    expect(await flutterInternetSignalPlugin.getPlatformVersion(), '42');
-  });
-
   test('getMobileSignalStrength', () async {
     FlutterInternetSignal flutterInternetSignalPlugin = FlutterInternetSignal();
-    MockFlutterInternetSignalPlatform fakePlatform =
-        MockFlutterInternetSignalPlatform();
+    MockFlutterInternetSignalPlatform fakePlatform = MockFlutterInternetSignalPlatform();
     FlutterInternetSignalPlatform.instance = fakePlatform;
 
     expect(await flutterInternetSignalPlugin.getMobileSignalStrength(), -100);
   });
 
-  test('getWifiSignalStrength', () async {
+  test('getWifiSignalInfo', () async {
     FlutterInternetSignal flutterInternetSignalPlugin = FlutterInternetSignal();
-    MockFlutterInternetSignalPlatform fakePlatform =
-        MockFlutterInternetSignalPlatform();
+    MockFlutterInternetSignalPlatform fakePlatform = MockFlutterInternetSignalPlatform();
     FlutterInternetSignalPlatform.instance = fakePlatform;
 
-    expect(await flutterInternetSignalPlugin.getWifiSignalStrength(), -100);
-  });
-
-  test('getWifiLinkSpeed', () async {
-    FlutterInternetSignal flutterInternetSignalPlugin = FlutterInternetSignal();
-    MockFlutterInternetSignalPlatform fakePlatform =
-        MockFlutterInternetSignalPlatform();
-    FlutterInternetSignalPlatform.instance = fakePlatform;
-
-    expect(await flutterInternetSignalPlugin.getWifiLinkSpeed(), 250);
+    expect(await flutterInternetSignalPlugin.getWifiSignalInfo(), WifiSignalInfo());
   });
 }
