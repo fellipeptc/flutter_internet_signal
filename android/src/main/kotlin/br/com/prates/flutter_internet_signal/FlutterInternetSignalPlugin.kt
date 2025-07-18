@@ -49,6 +49,10 @@ class FlutterInternetSignalPlugin : FlutterPlugin, MethodCallHandler {
             val ipAddress = signalHelper.getWifiIpAddress()
             result.success(ipAddress)
         }
+        if (call.method == "getWifiFrequency") {
+            val frequency = signalHelper.getWifiFrequency()
+            result.success(frequency)
+        }
         if (call.method == "isWifiEnabled") {
             val isWifiEnabled = signalHelper.isWifiEnabled()
             result.success(isWifiEnabled)

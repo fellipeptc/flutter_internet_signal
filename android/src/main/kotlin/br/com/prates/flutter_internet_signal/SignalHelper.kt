@@ -99,6 +99,18 @@ class SignalHelper(private val context: Context) {
         }
     }
 
+    fun getWifiFrequency(): Int? {
+        val wifiInfo: WifiInfo? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            getWifiInfoFromConnectivityManager()
+        } else {
+            val wifiManager = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as? WifiManager
+            if (wifiManager?.isWifiEnabled == true) {
+                wifiManager.connectionInfo
+            } else null
+        }
+        return wifiInfo?.frequency
+    }
+
     fun isWifiEnabled(): Boolean {
         val wifiManager = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as? WifiManager
         return wifiManager?.isWifiEnabled == true
@@ -127,9 +139,7 @@ class SignalHelper(private val context: Context) {
             val wifiManager = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
             val info = wifiManager.connectionInfo
             if(info.hiddenSSID) return "SSID Hidden"
-            if (info.ssid != WifiManager.UNKNOWN_SSID) {
-                return info.ssid
-            }
+            return info.ssid
         }
         return null
     }

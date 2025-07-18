@@ -12,24 +12,45 @@ The dBm value is negative — the closer to 0, the better the signal (e.g., -30 
 - Deprecated: getWifiSignalStrength() and getWifiLinkSpeed()
 - New: getWifiSignalInfo() method returns the class WifiSignalInfo.
 
-| Property  | Type      | Description                             |
-|-----------|-----------|-----------------------------------------|
-| `dbm`     | `int?`    | Wi-Fi signal strength (in dBm)          |
-| `mbps`    | `int?`    | Wi-Fi link speed (in Mbps)              |
-| `ssid`    | `String?` | Wi-Fi network name (SSID)               |
-| `bssid`   | `String?` | MAC address of the access point (BSSID) |
-| `ip`      | `String?` | Local IP address                        |
+### WifiSignalInfo
 
-|                | Android | iOS       |
-|----------------|---------|-----------|
-| **Support**    | SDK 17+ | under development |
+| Property    | Type      | Description                             |
+|-------------|-----------|-----------------------------------------|
+| `dbm`       | `int?`    | Wi-Fi signal strength (in dBm)          |
+| `mbps`      | `int?`    | Wi-Fi link speed (in Mbps)              |
+| `frequency` | `int?`    | Wi-Fi frequency (in MHz)                |
+| `ssid`      | `String?` | Wi-Fi network name (SSID)               |
+| `bssid`     | `String?` | MAC address of the access point (BSSID) |
+| `ip`        | `String?` | Local IP address                        |
+
+> ⚠️ **Note:** The returned SSID and BSSID may be `"<unknown ssid>"` on some Android versions due to privacy restrictions.
+>
+> - Ensure location permission is granted.
+> - Make sure the device is connected to a real Wi-Fi network.
+
+### ⚠️ About SSID and BSSID Limitations
+
+Due to privacy restrictions introduced in recent Android versions, **SSID** and **BSSID** may not be returned correctly under certain conditions.
+
+> - The device is running **Android 8.0 (API 26)** or higher **without location permissions** (`ACCESS_FINE_LOCATION` or `ACCESS_COARSE_LOCATION`).
+> - **Location services must be enabled** on the device (starting from Android 10+), even if the app has location permissions.
+> - The device is **not connected to a real Wi-Fi network**, or the network is **hidden**
+
+#### Expected behavior
+
+- In these cases, **SSID** may return `null` or `"unknown ssid"`, and **BSSID** may return a placeholder like `"02:00:00:00:00:00"`.
+
+| **Platform** | **Status**          |
+|--------------|---------------------|
+| Android      | ✅ Supported        |
+| iOS          | 🛠️ In development   |
 
 ### Android
 
 Change the minimum Android sdk version to 17 (or higher) in your `android/app/build.gradle` file.
 
 ```groovy
-minSdkVersion 17
+minSdkVersion 21
 ```
 
 Add permissions in your `manifest` file for mobile and wifi network:
@@ -50,8 +71,8 @@ import 'package:flutter_internet_signal/flutter_internet_signal.dart';
 
 void main() async {
   final FlutterInternetSignal internetSignal = FlutterInternetSignal();
-  final int? mobileSignal = await internetSignal.getMobileSignalStrength();
-  final WifiSignalInfo? wifiSignal = await internetSignal.getWifiSignalInfo();
+  final mobileSignal = await internetSignal.getMobileSignalStrength();
+  final wifiSignal = await internetSignal.getWifiSignalInfo();
   print('Result dBm -> $mobileSignal');
   print('Result wifi info -> ${wifiSignal.toString()}');
 }

@@ -1,3 +1,8 @@
+## 0.0.41
+
+* API Android version min 21
+* Add variable frequency in WifiSignalInfo class
+
 ## 0.0.40
 
 * Method getWifiSignalStrength() deprecated

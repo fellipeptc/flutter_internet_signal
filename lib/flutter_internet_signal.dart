@@ -23,12 +23,14 @@ class FlutterInternetSignal {
     return FlutterInternetSignalPlatform.instance.getMobileSignalStrength();
   }
 
-  @Deprecated('Use getWifiSignalInfo() instead. This method will be removed in a future release.\n')
+  @Deprecated(
+      'Use getWifiSignalInfo() instead. This method will be removed in a future release.\n')
   Future<int?> getWifiSignalStrength() {
     return FlutterInternetSignalPlatform.instance.getWifiSignalStrength();
   }
 
-  @Deprecated('Use getWifiSignalInfo() instead. This method will be removed in a future release.\n')
+  @Deprecated(
+      'Use getWifiSignalInfo() instead. This method will be removed in a future release.\n')
   Future<int?> getWifiLinkSpeed() {
     return FlutterInternetSignalPlatform.instance.getWifiLinkSpeed();
   }
@@ -38,6 +40,7 @@ class FlutterInternetSignal {
   /// This method combines:
   /// - Wi-Fi signal strength in dBm
   /// - Wi-Fi link speed in Mbps
+  /// - Wi-Fi frequency in MHz
   /// - Wi-Fi ssid
   /// - Wi-Fi bssid
   /// - Wi-Fi ip address

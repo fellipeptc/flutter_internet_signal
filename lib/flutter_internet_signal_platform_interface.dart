@@ -9,7 +9,8 @@ abstract class FlutterInternetSignalPlatform extends PlatformInterface {
 
   static final Object _token = Object();
 
-  static FlutterInternetSignalPlatform _instance = MethodChannelFlutterInternetSignal();
+  static FlutterInternetSignalPlatform _instance =
+      MethodChannelFlutterInternetSignal();
 
   /// The default instance of [FlutterInternetSignalPlatform] to use.
   ///
@@ -25,11 +26,13 @@ abstract class FlutterInternetSignalPlatform extends PlatformInterface {
   }
 
   Future<int?> getMobileSignalStrength() {
-    throw UnimplementedError('getMobileSignalStrength() has not been implemented.');
+    throw UnimplementedError(
+        'getMobileSignalStrength() has not been implemented.');
   }
 
   Future<int?> getWifiSignalStrength() {
-    throw UnimplementedError('getWifiSignalStrength() has not been implemented.');
+    throw UnimplementedError(
+        'getWifiSignalStrength() has not been implemented.');
   }
 
   Future<int?> getWifiLinkSpeed() {

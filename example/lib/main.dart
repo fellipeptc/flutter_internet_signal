@@ -91,9 +91,10 @@ class _MyAppState extends State<MyApp> {
                   return Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text('STREAM\n'),
+                      Text('STREAM - 2 seconds\n'),
                       Text('Wifi signal: ${signal?.dbm ?? '--'} [dBm]\n'),
                       Text('Wifi speed: ${signal?.mbps ?? '--'} [Mbps]\n'),
+                      Text('Wifi frequency: ${signal?.frequency ?? '--'} [Mhz]\n'),
                       Text('Wifi ssid: ${signal?.ssid ?? '--'}\n'),
                       Text('Wifi bssid: ${signal?.bssid ?? '--'}\n'),
                       Text('Wifi IP: ${signal?.ipAddress ?? '--'}\n'),

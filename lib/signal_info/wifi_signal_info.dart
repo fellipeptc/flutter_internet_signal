@@ -1,6 +1,7 @@
 class WifiSignalInfo {
   final int? dbm;
   final int? mbps;
+  final int? frequency;
   final String? ssid;
   final String? bssid;
   final String? ipAddress;
@@ -8,6 +9,7 @@ class WifiSignalInfo {
   const WifiSignalInfo({
     this.dbm,
     this.mbps,
+    this.frequency,
     this.ssid,
     this.bssid,
     this.ipAddress,
@@ -15,7 +17,7 @@ class WifiSignalInfo {
 
   @override
   String toString() {
-    return 'WifiSignalInfo(dbm: $dbm, mbps: $mbps, ssid: $ssid, bssid: $bssid, ipAddress: $ipAddress)';
+    return 'WifiSignalInfo(dbm: $dbm, mbps: $mbps, frequency: $frequency, ssid: $ssid, bssid: $bssid, ipAddress: $ipAddress)';
   }
 
   @override
@@ -24,6 +26,7 @@ class WifiSignalInfo {
 
     return other.dbm == dbm &&
         other.mbps == mbps &&
+        other.frequency == frequency &&
         other.ssid == ssid &&
         other.bssid == bssid &&
         other.ipAddress == ipAddress;
@@ -31,6 +34,11 @@ class WifiSignalInfo {
 
   @override
   int get hashCode {
-    return dbm.hashCode ^ mbps.hashCode ^ ssid.hashCode ^ bssid.hashCode ^ ipAddress.hashCode;
+    return dbm.hashCode ^
+        mbps.hashCode ^
+        frequency.hashCode ^
+        ssid.hashCode ^
+        bssid.hashCode ^
+        ipAddress.hashCode;
   }
 }

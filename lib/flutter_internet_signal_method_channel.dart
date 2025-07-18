@@ -12,7 +12,8 @@ class MethodChannelFlutterInternetSignal extends FlutterInternetSignalPlatform {
 
   @override
   Future<int?> getMobileSignalStrength() async {
-    final signal = await methodChannel.invokeMethod<int?>('getMobileSignalStrength');
+    final signal =
+        await methodChannel.invokeMethod<int?>('getMobileSignalStrength');
     return signal;
   }
 
@@ -22,6 +23,7 @@ class MethodChannelFlutterInternetSignal extends FlutterInternetSignalPlatform {
     return WifiSignalInfo(
       dbm: await getWifiSignalStrength(),
       mbps: await getWifiLinkSpeed(),
+      frequency: await _getWifiFrequency(),
       ssid: await _getWifiSsid(),
       bssid: await _getgetWifiBssid(),
       ipAddress: await _getWifiIpAddress(),
@@ -30,7 +32,8 @@ class MethodChannelFlutterInternetSignal extends FlutterInternetSignalPlatform {
 
   @override
   Future<int?> getWifiSignalStrength() async {
-    final wifiSignal = await methodChannel.invokeMethod<int?>('getWifiSignalStrength');
+    final wifiSignal =
+        await methodChannel.invokeMethod<int?>('getWifiSignalStrength');
     return wifiSignal;
   }
 
@@ -53,6 +56,12 @@ class MethodChannelFlutterInternetSignal extends FlutterInternetSignalPlatform {
   Future<String?> _getWifiIpAddress() async {
     final ssid = await methodChannel.invokeMethod<String?>('getWifiIpAddress');
     return ssid;
+  }
+
+  Future<int?> _getWifiFrequency() async {
+    final frequency =
+        await methodChannel.invokeMethod<int?>('getWifiFrequency');
+    return frequency;
   }
 
   Future<bool> _isWifiEnabled() async {
