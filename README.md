@@ -7,6 +7,11 @@ A Flutter plugin for **Android** to retrieve **mobile** and **Wi-Fi** signal inf
 Returns the received signal strength indicator (RSSI) of the current network in **dBm**.  
 The dBm value is negative — the closer to 0, the better the signal (e.g., -30 is excellent, -100 is poor).
 
+| **Platform** | **Status**           |
+|--------------|----------------------|
+| Android      | ✅ Supported (21+)   |
+| iOS          | 🛠️ In development    |
+
 ## ✨ New method - getWifiSignalInfo()
 
 - Deprecated: getWifiSignalStrength() and getWifiLinkSpeed()
@@ -23,11 +28,6 @@ The dBm value is negative — the closer to 0, the better the signal (e.g., -30 
 | `bssid`     | `String?` | MAC address of the access point (BSSID) |
 | `ip`        | `String?` | Local IP address                        |
 
-> ⚠️ **Note:** The returned SSID and BSSID may be `"<unknown ssid>"` on some Android versions due to privacy restrictions.
->
-> - Ensure location permission is granted.
-> - Make sure the device is connected to a real Wi-Fi network.
-
 ### ⚠️ About SSID and BSSID Limitations
 
 Due to privacy restrictions introduced in recent Android versions, **SSID** and **BSSID** may not be returned correctly under certain conditions.
@@ -38,12 +38,7 @@ Due to privacy restrictions introduced in recent Android versions, **SSID** and 
 
 #### Expected behavior
 
-- In these cases, **SSID** may return `null` or `"unknown ssid"`, and **BSSID** may return a placeholder like `"02:00:00:00:00:00"`.
-
-| **Platform** | **Status**           |
-|--------------|----------------------|
-| Android      | ✅ Supported (21+)   |
-| iOS          | 🛠️ In development    |
+In these cases, **SSID** may return `null` or `"unknown ssid"`, and **BSSID** may return a placeholder like `"02:00:00:00:00:00"`.
 
 ### Android
 
