@@ -1,3 +1,8 @@
+## 0.0.42
+
+* API Android version min 21 (LOLLIPOP)
+* Update README and CHANGELOG
+
 ## 0.0.41
 
 * API Android version min 21

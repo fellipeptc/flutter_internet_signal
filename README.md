@@ -40,14 +40,14 @@ Due to privacy restrictions introduced in recent Android versions, **SSID** and 
 
 - In these cases, **SSID** may return `null` or `"unknown ssid"`, and **BSSID** may return a placeholder like `"02:00:00:00:00:00"`.
 
-| **Platform** | **Status**          |
-|--------------|---------------------|
-| Android      | ✅ Supported        |
-| iOS          | 🛠️ In development   |
+| **Platform** | **Status**           |
+|--------------|----------------------|
+| Android      | ✅ Supported (21+)   |
+| iOS          | 🛠️ In development    |
 
 ### Android
 
-Change the minimum Android sdk version to 17 (or higher) in your `android/app/build.gradle` file.
+Change the minimum Android sdk version to 21 (or higher) in your `android/app/build.gradle` file.
 
 ```groovy
 minSdkVersion 21
