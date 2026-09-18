@@ -1,3 +1,11 @@
+## 0.0.44
+
+* Migrate Android implementation to Flutter's built-in Kotlin support
+* Add compatibility with Android Gradle Plugin (AGP) 9.0+
+* Remove explicit Kotlin Gradle Plugin (KGP) dependency
+* Updates the minimum supported SDK version to Flutter 3.44/Dart 3.12.
+* Update Android build configuration
+
 ## 0.0.43
 
 * README update explanation of use

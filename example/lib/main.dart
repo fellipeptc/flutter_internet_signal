@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:flutter_internet_signal/flutter_internet_signal.dart';
 import 'package:flutter_internet_signal/signal_info/wifi_signal_info.dart';
+import 'package:flutter_internet_signal_example/signal_chart.dart';
 
 void main() {
   runApp(const MyApp());
@@ -24,6 +25,9 @@ class _MyAppState extends State<MyApp> {
   StreamController<WifiSignalInfo?>? _wifiSignalController;
   Stream<WifiSignalInfo?> get wifiSignalStream => _wifiSignalController!.stream;
 
+  final List<double> _wifiSignalHistory = [];
+  static const int _maxHistory = 30;
+
   final _internetSignal = FlutterInternetSignal();
 
   @override
@@ -34,9 +38,20 @@ class _MyAppState extends State<MyApp> {
   }
 
   void _startSignalStream() {
-    _pollingTimer = Timer.periodic(const Duration(seconds: 2), (_) async {
+    _pollingTimer = Timer.periodic(const Duration(seconds: 1), (_) async {
       try {
         final wifi = await _internetSignal.getWifiSignalInfo();
+
+        if (wifi?.dbm != null) {
+          setState(() {
+            _wifiSignalHistory.add(wifi!.dbm!.toDouble());
+
+            if (_wifiSignalHistory.length > _maxHistory) {
+              _wifiSignalHistory.removeAt(0);
+            }
+          });
+        }
+
         _wifiSignalController?.add(wifi);
       } catch (e) {
         if (kDebugMode) print('Error open signal: $e');
@@ -74,15 +89,12 @@ class _MyAppState extends State<MyApp> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text('Mobile signal: ${_mobileSignal ?? '--'} [dBm]\n'),
-              SizedBox(height: 24),
+              SizedBox(height: 16),
               ElevatedButton(
                 onPressed: _getMobileSignal,
                 child: const Text('Get mobile signal'),
               ),
-              Padding(
-                padding: const EdgeInsets.all(24),
-                child: Divider(color: Colors.deepPurple),
-              ),
+              SizedBox(height: 16),
               StreamBuilder<WifiSignalInfo?>(
                 stream: wifiSignalStream,
                 builder: (context, snapshot) {
@@ -91,8 +103,11 @@ class _MyAppState extends State<MyApp> {
                   return Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text('STREAM - 2 seconds\n'),
+                      Text('STREAM - Timer periodic 1 second\n'),
                       Text('Wifi signal: ${signal?.dbm ?? '--'} [dBm]\n'),
+                      const SizedBox(height: 12),
+                      SignalChart(values: _wifiSignalHistory),
+                      const SizedBox(height: 12),
                       Text('Wifi speed: ${signal?.mbps ?? '--'} [Mbps]\n'),
                       Text('Wifi frequency: ${signal?.frequency ?? '--'} [Mhz]\n'),
                       Text('Wifi ssid: ${signal?.ssid ?? '--'}\n'),
